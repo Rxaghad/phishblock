@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>PhishBlock</title>
+
+<style>
+:root{
+  --bg:#020617;
+  --neon:#38bdf8;
+  --text:#e5e7eb;
+  --cyan:#38bdf8;
+}
+
+/* عام */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  padding-top:80px;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+/* Navbar */
+.navbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background:linear-gradient(180deg,#020617,#000);
+  border-bottom:1px solid rgba(229,231,235,.2);
+  z-index:1000;
+}
+
+.logo{
+  font-size:20px;
+  color:var(--neon);
+  text-shadow:0 0 10px var(--neon);
+}
+
+.navbar ul{
+  list-style:none;
+  display:flex;
+  gap:30px;
+  margin:0;
+  padding:0;
+}
+
+.navbar a{
+  color:var(--text);
+  text-decoration:none;
+  font-size:15px;
+  position:relative;
+  transition:.3s;
+}
+
+.navbar a::after{
+  content:'';
+  position:absolute;
+  bottom:-6px;
+  right:0;
+  width:0;
+  height:2px;
+  background:var(--neon);
+  box-shadow:0 0 10px var(--neon);
+  transition:.3s;
+}
+
+.navbar a:hover{
+  color:var(--neon);
+}
+
+.navbar a:hover::after{
+  width:100%;
+}
+
+/* Sections داخل كرت ممتد */
+section{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:80px 20px;
+}
+
+.card-container{
+  background: rgba(2,6,23,0.4);  /* شفافية */
+  backdrop-filter: blur(15px);    /* ضبابية الخلفية */
+  border-radius: 25px;
+  padding: 60px 50px;
+  width:98%;                      /* ممتد تقريبا لكل الصفحة */
+  text-align:center;
+  box-shadow: 0 0 30px rgba(56,189,248,0.5); /* ظل نيون */
+  margin:20px 0;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* كل شيء في الوسط */
+}
+
+/* نصوص */
+h1,h2{
+  letter-spacing:1px;
+}
+
+h2{
+  color:var(--cyan);
+  font-size:36px;
+  margin-bottom:20px;
+}
+
+p{
+  max-width:900px;
+  margin:15px auto;
+  line-height:1.8;
+  font-size:17px;
+}
+
+/* Hero text */
+.hero h1{
+  font-size:58px;
+  color:var(--neon);
+  text-shadow:0 0 20px var(--neon);
+}
+
+/* Cards داخل المؤشرات */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:25px;
+  max-width:1000px;
+  margin:auto;
+}
+
+.card{
+  background: rgba(2,6,23,0.6); 
+  border-radius:16px;
+  padding:25px;
+  box-shadow:0 0 20px rgba(56,189,248,0.4);
+  transition:.3s;
+  text-align:center;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 0 40px rgba(56,189,248,0.6);
+}
+
+/* Analyzer */
+input{
+  width:60%;
+  max-width:480px;
+  padding:15px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  background:#020617;
+  color:#fff;
+  border:1px solid rgba(229,231,235,.4);
+  text-align:center; 
+}
+
+button{
+  margin-top:25px;
+  padding:15px 35px;
+  border:none;
+  border-radius:12px;
+  background:var(--neon);
+  color:#020617;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 0 20px var(--neon);
+  transition:.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+.result{
+  margin-top:30px;
+  font-size:22px;
+  text-align:center;
+}
+
+/* Footer */
+footer{
+  padding:30px;
+  background:#020617;
+  border-top:1px solid rgba(229,231,235,.2);
+  border-radius:16px;
+  text-align:center;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:42px}
+  input{width:90%}
+  .navbar ul{gap:15px}
+  .card-container{padding:40px 20px;}
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="logo">PhishBlock</div>
+  <ul>
+    <li><a href="#home">الرئيسية</a></li>
+    <li><a href="#about">عن المنصة</a></li>
+    <li><a href="#indicators">المؤشرات</a></li>
+    <li><a href="#analyzer">تحليل الرابط</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+</nav>
+
+<canvas id="bg"></canvas>
+
+<section id="home" class="hero">
+  <div class="card-container">
+    <h1>🛡️ PhishBlock</h1>
+    <p>ضغطة واحدة على الرابط الخطأ قد تكلفك كل بياناتك.</p>
+    <p>
+      منصة توعوية تعتمد على الذكاء الاصطناعي
+      للكشف عن الروابط الضارة قبل الضغط عليها
+      وتعزيز الوعي السيبراني.
+    </p>
+  </div>
+</section>
+
+<section id="about">
+  <div class="card-container">
+    <h2>عن المنصة</h2>
+    <p>
+      تهدف المنصة إلى توعية المستخدمين بالمخاطر السيبرانية
+      وتقديم تجربة تعليمية لفهم أساليب التصيّد الإلكتروني
+      قبل الوقوع ضحية للهجمات الرقمية.
+    </p>
+  </div>
+</section>
+
+<section id="indicators">
+  <div class="card-container">
+    <h2>مؤشرات تحليل الرابط</h2>
+    <div class="cards">
+      <div class="card">🔍 فحص موثوقية النطاق</div>
+      <div class="card">⚠️ اكتشاف أنماط التصيّد</div>
+      <div class="card">🧪 تحليل السلوك المشبوه</div>
+      <div class="card">🔐 التحقق من مستوى الأمان</div>
+    </div>
+  </div>
+</section>
+
+<section id="analyzer">
+  <div class="card-container">
+    <h2>تحليل الرابط</h2>
+    <p>أدخل الرابط للحصول على تقييم توعوي.</p>
+    <input placeholder="ضع الرابط هنا">
+    <br>
+    <button onclick="analyze()">تحليل الرابط</button>
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="card-container">
+    <h2>تواصل معنا</h2>
+    <input placeholder="الاسم"><br><br>
+    <input placeholder="البريد الإلكتروني"><br><br>
+    <input placeholder="الرسالة"><br><br>
+    <button>إرسال</button>
+  </div>
+</section>
+
+<footer>
+  <p>© جميع الحقوق محفوظة | منصة توعوية سيبرانية</p>
+</footer>
+
+<script>
+/* Smooth Scroll */
+document.querySelectorAll('.navbar a').forEach(link=>{
+  link.addEventListener('click',e=>{
+    e.preventDefault();
+    document.querySelector(link.getAttribute('href'))
+      .scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* BACKGROUND متحرك */
+const c=document.getElementById("bg"),x=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
+let p=[];
+for(let i=0;i<120;i++)
+p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2,dx:Math.random(),dy:Math.random()});
+
+function anim(){
+  x.clearRect(0,0,c.width,c.height);
+  x.fillStyle="#e5e7eb33"; // شفاف
+  p.forEach(o=>{
+    x.beginPath();
+    x.arc(o.x,o.y,o.r,0,Math.PI*2);
+    x.fill();
+    o.x+=o.dx;o.y+=o.dy;
+    if(o.x>c.width)o.x=0;
+    if(o.y>c.height)o.y=0;
+  });
+  requestAnimationFrame(anim);
+}
+anim();
+
+function analyze(){
+  const r=document.getElementById("result");
+  r.innerHTML=Math.random()>0.5
+   ?"✅ الرابط يبدو آمنًا"
+   :"⚠️ الرابط مشبوه ويُنصح بعدم فتحه";
+}
+</script>
+
+</body>
+</html>
