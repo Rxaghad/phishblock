@@ -86,6 +86,14 @@ canvas{
   width:100%;
 }
 
+/* Hamburger Button */
+.hamburger{
+  display:none;
+  font-size:28px;
+  cursor:pointer;
+  color:var(--neon);
+}
+
 /* Sections داخل كرت ممتد */
 section{
   display:flex;
@@ -212,22 +220,16 @@ footer{
   input{width:90%; max-width:100%;}
   .card-container{padding:40px 20px; width:95%;}
   
-  .navbar{
-    flex-direction:column;
-    gap:10px;
-    padding:15px;
-  }
+  /* Hamburger Menu */
+  .hamburger{display:block;}
   .navbar ul{
     flex-direction:column;
     gap:10px;
     width:100%;
     align-items:center;
+    display:none; /* مخفي افتراضياً */
   }
-  
-  .cards{
-    grid-template-columns:1fr;
-    gap:15px;
-  }
+  .navbar ul.active{display:flex;}
 }
 </style>
 </head>
@@ -236,6 +238,7 @@ footer{
 
 <nav class="navbar">
   <div class="logo">PhishBlock</div>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
   <ul>
     <li><a href="#home">الرئيسية</a></li>
     <li><a href="#about">عن المنصة</a></li>
@@ -316,6 +319,12 @@ document.querySelectorAll('.navbar a').forEach(link=>{
       .scrollIntoView({behavior:'smooth'});
   });
 });
+
+/* Hamburger Menu Function */
+function toggleMenu(){
+  const ul = document.querySelector('.navbar ul');
+  ul.classList.toggle('active');
+}
 
 /* BACKGROUND متحرك */
 const c=document.getElementById("bg"),x=c.getContext("2d");
